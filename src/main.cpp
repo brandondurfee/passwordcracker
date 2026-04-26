@@ -84,20 +84,7 @@ int main (int argc, char* argv[]) {
     std::cout << "Target Digest: " << cfg.target_digest << std::endl;
 
     Cracker cracker(cfg);
-    // dispatch
-    if (cfg.mode == "brute") {
-        if (cfg.use_gpu) {
-            // run CUDA brute force
-
-        } else {
-            // run CPU brute force
-            struct CrackResult res = cracker.crackPassword();
-            std::cout << "hash: " << pprint_digest(res.digest) << ", plaintext: " << res.plaintext << std::endl; 
-        }
-    } else if (cfg.mode == "dict") {
-        // run dictionary attack
-    }
-    
+    struct CrackResult res = cracker.crackPassword();
+    std::cout << "hash: " << pprint_digest(res.digest) << ", plaintext: " << res.plaintext << std::endl; 
     return 0;
-
 }

@@ -32,24 +32,28 @@ void Cracker::indexToPassword(int idx, unsigned char* out, int length) {
 }
 
 /*
-* 
+* crack the password. Decide what type of cracking to do
 */
 struct CrackResult Cracker::crackPassword() {
     struct CrackResult result;
     if (cfg.mode == "brute") {
         if (cfg.use_gpu) {
-
+            // crack the password using brute force GPU
         } else {
+            // crack the password using brute force CPU
             result = crack_cpu_brute();
         }
     } else {
-        
+        // crack the password using dictionary attack on the CPU
+        result = crack_cpu_dict();
     }
     
     return result;
 }
 
-
+/**
+* crack the password brute force with the CPU
+*/
 struct CrackResult Cracker::crack_cpu_brute() {
     unsigned char buf[cfg.length + 1];
     buf[cfg.length] = '\0';
@@ -74,5 +78,33 @@ struct CrackResult Cracker::crack_cpu_brute() {
     }
 
     result.plaintext = "not found";
+    return result;
+}
+
+/**
+* crack the password with the CPU using a dictionary attack
+*/
+struct CrackResult Cracker::crack_cpu_dict() {
+    unsigned char buf[cfg.length + 1];
+    buf[cfg.length] = '\0';
+
+    unsigned char digest[MD5_DIGEST_LENGTH];
+    unsigned char target_digest[MD5_DIGEST_LENGTH];
+
+    hex_to_bytes(cfg.target_digest, target_digest); 
+
+    struct CrackResult result;
+
+    std::vector<std::string> wordlist = load_wordlist(cfg.wordlist);
+    for (int i = 0; i < wordlist.size(); i++) {
+        MD5((unsigned char*) wordlist.at(i).c_str(), wordlist.at(i).size(), digest);
+
+        if (memcmp(digest, target_digest, MD5_DIGEST_LENGTH) == 0) {
+            memcpy(result.digest, digest, MD5_DIGEST_LENGTH);
+            result.plaintext = wordlist.at(i);
+            return result;
+        }
+    }
+
     return result;
 }
