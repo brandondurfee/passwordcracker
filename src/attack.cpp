@@ -72,13 +72,8 @@ struct CrackResult Cracker::crack_cpu_brute() {
     for (int i = 0; i < total; i++) {
         indexToPassword(i, buf, cfg.length);
 
-        MD5(buf, cfg.length, digest);
-
-        if (memcmp(digest, target_digest, MD5_DIGEST_LENGTH) == 0) {
-            memcpy(result.digest, digest, MD5_DIGEST_LENGTH);
-            result.plaintext = std::string((char*) buf);
-            return result;
-        }
+        result = compareDigest(buf, target_digest);
+        if (result.match) return result;
     }
 
     result.plaintext = "not found";
@@ -89,9 +84,6 @@ struct CrackResult Cracker::crack_cpu_brute() {
 * crack the password with the CPU using a dictionary attack
 */
 struct CrackResult Cracker::crack_cpu_dict() {
-    unsigned char buf[cfg.length + 1];
-    buf[cfg.length] = '\0';
-
     unsigned char digest[MD5_DIGEST_LENGTH];
     unsigned char target_digest[MD5_DIGEST_LENGTH];
 
@@ -101,27 +93,38 @@ struct CrackResult Cracker::crack_cpu_dict() {
 
     std::vector<std::string> wordlist = load_wordlist(cfg.wordlist);
     for (const auto& word : wordlist) {
-
-        MD5((unsigned char*) word.c_str(), word.size(), digest);
-        
-        if (memcmp(digest, target_digest, MD5_DIGEST_LENGTH) == 0) {
-            memcpy(result.digest, digest, MD5_DIGEST_LENGTH);
-            result.plaintext = word;
-            return result;
-        }
+        result = compareDigest(word, target_digest);
+        if (result.match) return result;
 
         // apply ruleset
         for (const auto& rule : ruleset) {
-            std::string w = rule(word);
-            MD5((unsigned char*) w.c_str(), w.size(), digest);
-
-            if (memcmp(digest, target_digest, MD5_DIGEST_LENGTH) == 0) {
-                memcpy(result.digest, digest, MD5_DIGEST_LENGTH);
-                result.plaintext = w;
-                return result;
-            }
+            std::string rulew = rule(word);
+            result = compareDigest(rulew, target_digest);
+            if (result.match) return result;
         }
     }
     result.plaintext = "not found";
+    return result;
+}
+
+struct CrackResult Cracker::compareDigest(unsigned char* buf, unsigned char* target_digest) {
+    std::string word = reinterpret_cast<const char*>(buf);
+    return compareDigest(word, target_digest);
+}
+
+struct CrackResult Cracker::compareDigest(const std::string& word, unsigned char* target_digest) {
+    struct CrackResult result;
+    unsigned char digest[MD5_DIGEST_LENGTH];
+
+    MD5((unsigned char*) word.c_str(), word.size(), digest);
+    
+    if (memcmp(digest, target_digest, MD5_DIGEST_LENGTH) == 0) {
+        memcpy(result.digest, digest, MD5_DIGEST_LENGTH);
+        result.plaintext = word;
+        result.match = true;
+    } else {
+        result.match = false;
+    }
+
     return result;
 }

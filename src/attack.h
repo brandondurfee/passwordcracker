@@ -34,6 +34,10 @@ private:
 
     // function to turn the index into a generated password
     void indexToPassword(int index, unsigned char* buf, int length);
+
+    // function to compute the MD5 hash of the string, and create a CrackResult
+    struct CrackResult compareDigest(const std::string& word, unsigned char* target_digest);
+    struct CrackResult compareDigest(unsigned char* buf, unsigned char* target_digest); // unsigned char* version
 };
 
 

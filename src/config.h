@@ -6,6 +6,7 @@
 
 enum class CrackerType {brute, dict};
 enum class DeviceType {cpu, gpu};
+// TODO: other hashes?
 
 struct Config {
     std::string mode;
@@ -21,4 +22,5 @@ struct Config {
 struct CrackResult {
     std::string plaintext;
     unsigned char digest[MD5_DIGEST_LENGTH];
+    bool match;
 };
