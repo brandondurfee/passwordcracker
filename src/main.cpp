@@ -21,8 +21,8 @@ struct Config parse_args(int argc, char* argv[]) {
             cfg.use_gpu = true;
         } else if (arg == "--wordlist") {
             cfg.wordlist = argv[++i];
-        } else if (arg == "--target") {
-            cfg.target = argv[++i];
+        } else if (arg == "--length") {
+            cfg.length = std::stoi(argv[++i]);
         } else if (arg == "--charset") {
             cfg.charset = argv[++i];
         } else if (arg == "--target_digest") {
@@ -81,7 +81,7 @@ int main (int argc, char* argv[]) {
         std::cout << "Wordlist: " << cfg.wordlist << "\n";
     }
 
-    std::cout << "Target Digest: " << cfg.target << std::endl;
+    std::cout << "Target Digest: " << cfg.target_digest << std::endl;
 
     Cracker cracker(cfg);
     // dispatch
