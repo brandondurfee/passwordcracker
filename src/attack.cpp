@@ -7,7 +7,7 @@
 #include <atomic>
 
 /*
-* inline bool helper
+* inline helper to compare digests
 */
 inline bool check_candidate(const char* buf, int len, unsigned char* digest, unsigned char* target) {
     MD5((unsigned char*)buf, len, digest);
