@@ -1,7 +1,9 @@
 TODO:
 1. parallelize the CPU brute threading cracker using OpenMP [DONE]
 2. add dictionary attack using wordlist (passed in as a file) and dictionary rules [DONE]
-3. add GPU brute force attack
+3. add GPU brute force attack [DONE]
+4. add timing measurements (total amount of time & hashes/sec)
+5. add Makefile
 
 Extensions:
 1. add dictionary attack on GPUs
@@ -24,7 +26,7 @@ nvcc -Xcompiler -fopenmp main.cpp cuda_cracker.cu attack.cpp dict.cpp utils.cpp 
 (base) brandon@Brandons-MacBook-Air-2 src % echo -n "hello" | md5sum
 5d41402abc4b2a76b9719d911017c592
 
-(base) brandon@Brandons-MacBook-Air-2 src % ./a.out --mode brute --target_digest 5d41402abc4b2a76b9719d911017c592 --length 5
+(base) brandon@Brandons-MacBook-Air-2 src % ./cracker --mode brute --target_digest 5d41402abc4b2a76b9719d911017c592 --length 5
 Mode: brute
 Threads: 1
 Length: 5
@@ -45,4 +47,3 @@ Rules basic
 Target Digest: 9f748013af895cce7c56044e75ea3a96
 hash: 9f748013af895cce7c56044e75ea3a96, plaintext: gr8c4tch
 ```
-
