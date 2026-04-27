@@ -85,9 +85,6 @@ void crack_kernel(
 	char buf[16];
 	unsigned char digest[MD5_DIGEST_LENGTH];
 
-	char to_print[17];
-	to_print[16] = '\0';
-
     for (uint64_t i = tid; i < total; i += stride) {
         if (*found) return;
 		indexToPassword(i, buf, length, charset, base);
