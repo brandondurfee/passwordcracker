@@ -1,3 +1,4 @@
 .kiro/
 rockyou.txt
-src/cracker
+src/*.o
+cracker
