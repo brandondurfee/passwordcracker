@@ -1,10 +1,12 @@
 #include "attack.h"
 #include "utils.h"
 #include "dict.h"
+#include "cuda_cracker.h"
 
 #include <cstring>
 #include <openssl/md5.h>
 #include <atomic>
+#include <iostream>
 
 /*
 * inline helper to compare digests
@@ -52,6 +54,7 @@ struct CrackResult Cracker::crackPassword() {
     if (cfg.mode == "brute") {
         if (cfg.use_gpu) {
             // crack the password using brute force GPU
+            result = crack_gpu_brute();
         } else {
             // crack the password using brute force CPU
             result = crack_cpu_brute();
@@ -151,4 +154,12 @@ struct CrackResult Cracker::crack_cpu_dict() {
 
     if (!result.match) result.plaintext = "password not found";
     return result;
+}
+
+struct CrackResult Cracker::crack_gpu_brute() {
+    struct CrackResult res;
+
+    launch_hello();
+
+    return res;
 }
