@@ -101,6 +101,10 @@ Mon Apr 27 19:14:40 2026
 ```
 
 
-Default charset: abcdefghijklmnopqrstuvwxyz
+Charsets:
 
-ABCDEFGHIJKLMNOPQRSTUVWXYZ*@!$
+Default Charset: abcdefghijklmnopqrstuvwxyz
+
+Advanced Charset: abcdefghijklmnopqrstuvwxyz!@*$
+
+Ultra Charset: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@*$
